@@ -1,4 +1,4 @@
-# LicenseChain C++ SDK
+﻿# LicenseChain C++ SDK
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![C++](https://img.shields.io/badge/C++-17+-blue.svg)](https://en.cppreference.com/)
@@ -6,18 +6,18 @@
 
 Official C++ SDK for LicenseChain - Secure license management for C++ applications.
 
-## 🚀 Features
+## ðŸš€ Features
 
-- **🔐 Secure Authentication** - User registration, login, and session management
-- **📜 License Management** - Create, validate, update, and revoke licenses
-- **🛡️ Hardware ID Validation** - Prevent license sharing and unauthorized access
-- **🔔 Webhook Support** - Real-time license events and notifications
-- **📊 Analytics Integration** - Track license usage and performance metrics
-- **⚡ High Performance** - Optimized for production workloads
-- **🔄 Async Operations** - Non-blocking HTTP requests and data processing
-- **🛠️ Easy Integration** - Simple API with comprehensive documentation
+- **ðŸ” Secure Authentication** - User registration, login, and session management
+- **ðŸ“œ License Management** - Create, validate, update, and revoke licenses
+- **ðŸ›¡ï¸ Hardware ID Validation** - Prevent license sharing and unauthorized access
+- **ðŸ”” Webhook Support** - Real-time license events and notifications
+- **ðŸ“Š Analytics Integration** - Track license usage and performance metrics
+- **âš¡ High Performance** - Optimized for production workloads
+- **ðŸ”„ Async Operations** - Non-blocking HTTP requests and data processing
+- **ðŸ› ï¸ Easy Integration** - Simple API with comprehensive documentation
 
-## 📦 Installation
+## ðŸ“¦ Installation
 
 ### Method 1: CMake (Recommended)
 
@@ -54,7 +54,7 @@ target_link_libraries(your_target LicenseChain::LicenseChain)
 2. Extract the headers and libraries to your project
 3. Link against the LicenseChain library
 
-## 🚀 Quick Start
+## ðŸš€ Quick Start
 
 ### Basic Setup
 
@@ -172,7 +172,7 @@ client.setWebhookHandler([](const std::string& event, const std::map<std::string
 client.startWebhookListener();
 ```
 
-## 📚 API Reference
+## ðŸ“š API Reference
 
 ### LicenseChain::Client
 
@@ -276,7 +276,7 @@ client.trackEvent(eventName, properties);
 auto result = client.getAnalytics(timeRange);
 ```
 
-## 🔧 Configuration
+## ðŸ”§ Configuration
 
 ### Environment Variables
 
@@ -307,7 +307,7 @@ LicenseChain::Client client({
 });
 ```
 
-## 🛡️ Security Features
+## ðŸ›¡ï¸ Security Features
 
 ### Hardware ID Protection
 
@@ -335,7 +335,7 @@ auto isValid = client.validateHardwareId(licenseKey, hardwareId);
 - Expiration checking
 - Feature-based access control
 
-## 📊 Analytics and Monitoring
+## ðŸ“Š Analytics and Monitoring
 
 ### Event Tracking
 
@@ -363,7 +363,7 @@ std::cout << "Success Rate: " << (metrics.successRate * 100) << "%" << std::endl
 std::cout << "Error Count: " << metrics.errorCount << std::endl;
 ```
 
-## 🔄 Error Handling
+## ðŸ”„ Error Handling
 
 ### Custom Error Types
 
@@ -401,7 +401,7 @@ LicenseChain::Client client({
 });
 ```
 
-## 🧪 Testing
+## ðŸ§ª Testing
 
 ### Unit Tests
 
@@ -418,7 +418,7 @@ ctest --output-on-failure
 ./tests/integration_tests
 ```
 
-## 📝 Examples
+## ðŸ“ Examples
 
 See the `examples/` directory for complete examples:
 
@@ -426,7 +426,7 @@ See the `examples/` directory for complete examples:
 - `advanced_features.cpp` - Advanced features and configuration
 - `webhook_integration.cpp` - Webhook handling
 
-## 🤝 Contributing
+## ðŸ¤ Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
@@ -437,18 +437,18 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 3. Build: `mkdir build && cd build && cmake .. && make`
 4. Test: `ctest`
 
-## 📄 License
+## ðŸ“„ License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## ðŸ†˜ Support
 
 - **Documentation**: [https://docs.licensechain.app/cpp](https://docs.licensechain.app/cpp)
 - **Issues**: [GitHub Issues](https://github.com/LicenseChain/LicenseChain-CPP-SDK/issues)
 - **Discord**: [LicenseChain Discord](https://discord.gg/licensechain)
 - **Email**: support@licensechain.app
 
-## 🔗 Related Projects
+## ðŸ”— Related Projects
 
 - [LicenseChain JavaScript SDK](https://github.com/LicenseChain/LicenseChain-JavaScript-SDK)
 - [LicenseChain Python SDK](https://github.com/LicenseChain/LicenseChain-Python-SDK)
@@ -457,4 +457,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ for the C++ community**
+**Made with â¤ï¸ for the C++ community**
+
+
+## API Endpoints
+
+All endpoints automatically use the /v1 prefix when connecting to https://api.licensechain.app.
+
+### Base URL
+- **Production**: https://api.licensechain.app/v1\n- **Development**: https://api.licensechain.app/v1\n\n### Available Endpoints\n\n| Method | Endpoint | Description |\n|--------|----------|-------------|\n| GET | /v1/health | Health check |\n| POST | /v1/auth/login | User login |\n| POST | /v1/auth/register | User registration |\n| GET | /v1/apps | List applications |\n| POST | /v1/apps | Create application |\n| GET | /v1/licenses | List licenses |\n| POST | /v1/licenses/verify | Verify license |\n| GET | /v1/webhooks | List webhooks |\n| POST | /v1/webhooks | Create webhook |\n| GET | /v1/analytics | Get analytics |\n\n**Note**: The SDK automatically prepends /v1 to all endpoints, so you only need to specify the path (e.g., /auth/login instead of /v1/auth/login).
+
