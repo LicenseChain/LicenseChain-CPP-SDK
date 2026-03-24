@@ -1,4 +1,5 @@
 #include "licensechain/utils.h"
+#include "licensechain/exceptions.h"
 #include <regex>
 #include <random>
 #include <sstream>
@@ -7,10 +8,12 @@
 #include <thread>
 #include <chrono>
 #include <openssl/sha.h>
+#include <openssl/md5.h>
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
 #include <openssl/bio.h>
 #include <openssl/buffer.h>
+#include <openssl/crypto.h>
 
 namespace LicenseChain {
 
@@ -54,7 +57,7 @@ std::string Utils::sanitizeInput(const std::string& input) {
     std::replace(result.begin(), result.end(), '<', '<');
     std::replace(result.begin(), result.end(), '>', '>');
     std::replace(result.begin(), result.end(), '"', '"');
-    std::replace(result.begin(), result.end(), '\'', ''');
+    std::replace(result.begin(), result.end(), '\'', ' ');
     
     return result;
 }
@@ -290,8 +293,12 @@ std::string Utils::createWebhookSignature(const std::string& payload, const std:
 }
 
 bool Utils::verifyWebhookSignature(const std::string& payload, const std::string& signature, const std::string& secret) {
-    std::string expectedSignature = createWebhookSignature(payload, secret);
-    return signature == expectedSignature;
+    if (payload.empty() || signature.empty() || secret.empty()) return false;
+    std::string expected = createWebhookSignature(payload, secret);
+    const std::string received = (signature.size() >= 7 && signature.compare(0, 7, "sha256=") == 0)
+        ? signature.substr(7) : signature;
+    if (expected.size() != received.size()) return false;
+    return CRYPTO_memcmp(expected.data(), received.data(), expected.size()) == 0;
 }
 
 std::string Utils::sha256(const std::string& data) {
@@ -433,7 +440,7 @@ std::string Utils::jsonSerialize(const std::map<std::string, std::string>& data)
 std::map<std::string, std::string> Utils::jsonDeserialize(const std::string& jsonString) {
     std::map<std::string, std::string> result;
     // Simple JSON parsing - in production, use a proper JSON library
-    std::regex keyValueRegex(R"("([^"]+)"\s*:\s*"([^"]*)")");
+    std::regex keyValueRegex(R"delim("([^"]+)"\s*:\s*"([^"]*)")delim");
     std::sregex_iterator iter(jsonString.begin(), jsonString.end(), keyValueRegex);
     std::sregex_iterator end;
     

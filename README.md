@@ -1,4 +1,4 @@
-﻿# LicenseChain C++ SDK
+# LicenseChain C++ SDK
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![C++](https://img.shields.io/badge/C++-17+-blue.svg)](https://en.cppreference.com/)
@@ -63,21 +63,18 @@ target_link_libraries(your_target LicenseChain::LicenseChain)
 #include <iostream>
 
 int main() {
-    // Initialize the client
-    LicenseChain::Client client({
-        .apiKey = "your-api-key",
-        .appName = "your-app-name",
-        .version = "1.0.0"
-    });
-    
-    // Connect to LicenseChain
-    auto result = client.connect();
-    if (!result.success) {
-        std::cerr << "Failed to connect to LicenseChain: " << result.error << std::endl;
-        return 1;
-    }
-    
-    std::cout << "Connected to LicenseChain successfully!" << std::endl;
+    // Initialize API client
+    licensechain::LicenseChainClient client(
+        "your-api-key",
+        "https://api.licensechain.app",
+        30
+    );
+
+    // Example: health endpoint (via GetHealthCheckAsync)
+    auto healthFuture = client.GetHealthCheckAsync();
+    auto health = healthFuture.get();
+    std::cout << "Health status request completed." << std::endl;
+
     return 0;
 }
 ```
@@ -85,195 +82,74 @@ int main() {
 ### User Authentication
 
 ```cpp
-// Register a new user
-auto registerResult = client.register("username", "password", "email@example.com");
-if (registerResult.success) {
-    std::cout << "User registered successfully!" << std::endl;
-} else {
-    std::cerr << "Registration failed: " << registerResult.error << std::endl;
-}
-
-// Login existing user
-auto loginResult = client.login("username", "password");
-if (loginResult.success) {
-    std::cout << "User logged in successfully!" << std::endl;
-    std::cout << "Session ID: " << loginResult.sessionId << std::endl;
-} else {
-    std::cerr << "Login failed: " << loginResult.error << std::endl;
-}
+LicenseChain::UserRegistrationRequest registerRequest;
+registerRequest.email = "email@example.com";
+registerRequest.password = "strong-password";
+registerRequest.name = "Example User";
+auto user = client.RegisterUserAsync(registerRequest).get();
+std::cout << "User registered: " << user.email << std::endl;
 ```
 
 ### License Management
 
 ```cpp
-// Validate a license
-auto validateResult = client.validateLicense("LICENSE-KEY-HERE");
-if (validateResult.success) {
-    std::cout << "License is valid!" << std::endl;
-    std::cout << "License Key: " << validateResult.license.key << std::endl;
-    std::cout << "Status: " << validateResult.license.status << std::endl;
-    std::cout << "Expires: " << validateResult.license.expires << std::endl;
-    std::cout << "Features: ";
-    for (const auto& feature : validateResult.license.features) {
-        std::cout << feature << " ";
-    }
-    std::cout << std::endl;
-    std::cout << "User: " << validateResult.license.user << std::endl;
-} else {
-    std::cerr << "License validation failed: " << validateResult.error << std::endl;
-}
+auto validation = client.ValidateLicenseAsync("LICENSE-KEY-HERE").get();
+std::cout << "Valid: " << (validation.valid ? "true" : "false") << std::endl;
 
-// Get user's licenses
-auto licensesResult = client.getUserLicenses();
-if (licensesResult.success) {
-    std::cout << "Found " << licensesResult.licenses.size() << " licenses:" << std::endl;
-    for (size_t i = 0; i < licensesResult.licenses.size(); ++i) {
-        const auto& license = licensesResult.licenses[i];
-        std::cout << "  " << (i + 1) << ". " << license.key 
-                  << " - " << license.status 
-                  << " (Expires: " << license.expires << ")" << std::endl;
-    }
-}
-```
-
-### Hardware ID Validation
-
-```cpp
-// Get hardware ID (automatically generated)
-std::string hardwareId = client.getHardwareId();
-std::cout << "Hardware ID: " << hardwareId << std::endl;
-
-// Validate hardware ID with license
-auto hardwareResult = client.validateHardwareId("LICENSE-KEY-HERE", hardwareId);
-if (hardwareResult.success) {
-    std::cout << "Hardware ID is valid for this license!" << std::endl;
-} else {
-    std::cerr << "Hardware ID validation failed: " << hardwareResult.error << std::endl;
-}
-```
-
-### Webhook Integration
-
-```cpp
-// Set up webhook handler
-client.setWebhookHandler([](const std::string& event, const std::map<std::string, std::string>& data) {
-    std::cout << "Webhook received: " << event << std::endl;
-    
-    if (event == "license.created") {
-        std::cout << "New license created: " << data.at("licenseKey") << std::endl;
-    } else if (event == "license.updated") {
-        std::cout << "License updated: " << data.at("licenseKey") << std::endl;
-    } else if (event == "license.revoked") {
-        std::cout << "License revoked: " << data.at("licenseKey") << std::endl;
-    }
-});
-
-// Start webhook listener
-client.startWebhookListener();
+auto stats = client.GetAnalyticsAsync(LicenseChain::AnalyticsRequest{}).get();
+std::cout << "Analytics request completed." << std::endl;
 ```
 
 ## ðŸ“š API Reference
 
-### LicenseChain::Client
+### licensechain::LicenseChainClient
 
 #### Constructor
 
 ```cpp
-LicenseChain::Client client({
-    .apiKey = "your-api-key",
-    .appName = "your-app-name",
-    .version = "1.0.0",
-    .baseUrl = "https://api.licensechain.app"  // Optional
-});
+licensechain::LicenseChainClient client(
+    "your-api-key",
+    "https://api.licensechain.app",
+    30
+);
 ```
 
 #### Methods
-
-##### Connection Management
-
-```cpp
-// Connect to LicenseChain
-auto result = client.connect();
-
-// Disconnect from LicenseChain
-client.disconnect();
-
-// Check connection status
-bool isConnected = client.isConnected();
-```
 
 ##### User Authentication
 
 ```cpp
 // Register a new user
-auto result = client.register(username, password, email);
-
-// Login existing user
-auto result = client.login(username, password);
-
-// Logout current user
-client.logout();
+auto result = client.RegisterUserAsync(request).get();
 
 // Get current user info
-auto user = client.getCurrentUser();
+auto user = client.GetUserProfileAsync().get();
 ```
 
 ##### License Management
 
 ```cpp
 // Validate a license
-auto result = client.validateLicense(licenseKey);
-
-// Get user's licenses
-auto result = client.getUserLicenses();
+auto result = client.ValidateLicenseAsync(licenseKey).get();
 
 // Create a new license
-auto result = client.createLicense(userId, features, expires);
+auto result = client.CreateLicenseAsync(request).get();
 
 // Update a license
-auto result = client.updateLicense(licenseKey, updates);
+auto result = client.UpdateLicenseAsync(licenseId, request).get();
 
 // Revoke a license
-auto result = client.revokeLicense(licenseKey);
+client.RevokeLicenseAsync(licenseId).get();
 
 // Extend a license
-auto result = client.extendLicense(licenseKey, days);
-```
-
-##### Hardware ID Management
-
-```cpp
-// Get hardware ID
-std::string hardwareId = client.getHardwareId();
-
-// Validate hardware ID
-auto result = client.validateHardwareId(licenseKey, hardwareId);
-
-// Bind hardware ID to license
-auto result = client.bindHardwareId(licenseKey, hardwareId);
-```
-
-##### Webhook Management
-
-```cpp
-// Set webhook handler
-client.setWebhookHandler(handler);
-
-// Start webhook listener
-client.startWebhookListener();
-
-// Stop webhook listener
-client.stopWebhookListener();
+client.ExtendLicenseAsync(licenseId, "2027-01-01T00:00:00Z").get();
 ```
 
 ##### Analytics
 
 ```cpp
-// Track event
-client.trackEvent(eventName, properties);
-
 // Get analytics data
-auto result = client.getAnalytics(timeRange);
+auto result = client.GetAnalyticsAsync(request).get();
 ```
 
 ## ðŸ”§ Configuration
@@ -285,8 +161,6 @@ Set these in your environment or through your build process:
 ```bash
 # Required
 export LICENSECHAIN_API_KEY=your-api-key
-export LICENSECHAIN_APP_NAME=your-app-name
-export LICENSECHAIN_APP_VERSION=1.0.0
 
 # Optional
 export LICENSECHAIN_BASE_URL=https://api.licensechain.app
@@ -296,71 +170,33 @@ export LICENSECHAIN_DEBUG=true
 ### Advanced Configuration
 
 ```cpp
-LicenseChain::Client client({
-    .apiKey = "your-api-key",
-    .appName = "your-app-name",
-    .version = "1.0.0",
-    .baseUrl = "https://api.licensechain.app",
-    .timeout = 30, // Request timeout in seconds
-    .retries = 3,  // Number of retry attempts
-    .debug = false // Enable debug logging
-});
+licensechain::LicenseChainClient client(
+    "your-api-key",
+    "https://api.licensechain.app",
+    30
+);
 ```
 
 ## ðŸ›¡ï¸ Security Features
-
-### Hardware ID Protection
-
-The SDK automatically generates and manages hardware IDs to prevent license sharing:
-
-```cpp
-// Hardware ID is automatically generated and stored
-std::string hardwareId = client.getHardwareId();
-
-// Validate against license
-auto isValid = client.validateHardwareId(licenseKey, hardwareId);
-```
 
 ### Secure Communication
 
 - All API requests use HTTPS
 - API keys are securely stored and transmitted
-- Session tokens are automatically managed
 - Webhook signatures are verified
 
 ### License Validation
 
 - Real-time license validation
-- Hardware ID binding
 - Expiration checking
-- Feature-based access control
 
 ## ðŸ“Š Analytics and Monitoring
 
-### Event Tracking
+### Statistics
 
 ```cpp
-// Track custom events
-client.trackEvent("app.started", {
-    {"level", 1},
-    {"playerCount", 10}
-});
-
-// Track license events
-client.trackEvent("license.validated", {
-    {"licenseKey", "LICENSE-KEY"},
-    {"features", "premium,unlimited"}
-});
-```
-
-### Performance Monitoring
-
-```cpp
-// Get performance metrics
-auto metrics = client.getPerformanceMetrics();
-std::cout << "API Response Time: " << metrics.avgResponseTime << "ms" << std::endl;
-std::cout << "Success Rate: " << (metrics.successRate * 100) << "%" << std::endl;
-std::cout << "Error Count: " << metrics.errorCount << std::endl;
+auto analytics = client.GetAnalyticsAsync(request).get();
+auto usage = client.GetUsageStatsAsync(request).get();
 ```
 
 ## ðŸ”„ Error Handling
@@ -369,20 +205,14 @@ std::cout << "Error Count: " << metrics.errorCount << std::endl;
 
 ```cpp
 try {
-    auto result = client.validateLicense("invalid-key");
-    if (!result.success) {
-        switch (result.errorType) {
-            case LicenseChain::ErrorType::INVALID_LICENSE:
-                std::cerr << "License key is invalid" << std::endl;
-                break;
-            case LicenseChain::ErrorType::EXPIRED_LICENSE:
-                std::cerr << "License has expired" << std::endl;
-                break;
-            case LicenseChain::ErrorType::NETWORK_ERROR:
-                std::cerr << "Network connection failed" << std::endl;
-                break;
-        }
-    }
+    auto result = client.ValidateLicenseAsync("invalid-key").get();
+    (void)result;
+} catch (const LicenseChain::ValidationException& e) {
+    std::cerr << "Validation error: " << e.what() << std::endl;
+} catch (const LicenseChain::NetworkException& e) {
+    std::cerr << "Network error: " << e.what() << std::endl;
+} catch (const LicenseChain::LicenseChainException& e) {
+    std::cerr << "LicenseChain error: " << e.what() << std::endl;
 } catch (const std::exception& e) {
     std::cerr << "Exception: " << e.what() << std::endl;
 }
@@ -391,14 +221,12 @@ try {
 ### Retry Logic
 
 ```cpp
-// Automatic retry for network errors
-LicenseChain::Client client({
-    .apiKey = "your-api-key",
-    .appName = "your-app-name",
-    .version = "1.0.0",
-    .retries = 3, // Retry up to 3 times
-    .retryDelay = 1000 // Wait 1 second between retries
-});
+// Configure timeout at client construction
+licensechain::LicenseChainClient client(
+    "your-api-key",
+    "https://api.licensechain.app",
+    30
+);
 ```
 
 ## ðŸ§ª Testing
@@ -413,10 +241,7 @@ ctest --output-on-failure
 
 ### Integration Tests
 
-```bash
-# Test with real API
-./tests/integration_tests
-```
+Integration tests are repository-specific and may not be present in all snapshots.
 
 ## ðŸ“ Examples
 
@@ -465,5 +290,41 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 All endpoints automatically use the /v1 prefix when connecting to https://api.licensechain.app.
 
 ### Base URL
-- **Production**: https://api.licensechain.app/v1\n- **Development**: https://api.licensechain.app/v1\n\n### Available Endpoints\n\n| Method | Endpoint | Description |\n|--------|----------|-------------|\n| GET | /v1/health | Health check |\n| POST | /v1/auth/login | User login |\n| POST | /v1/auth/register | User registration |\n| GET | /v1/apps | List applications |\n| POST | /v1/apps | Create application |\n| GET | /v1/licenses | List licenses |\n| POST | /v1/licenses/verify | Verify license |\n| GET | /v1/webhooks | List webhooks |\n| POST | /v1/webhooks | Create webhook |\n| GET | /v1/analytics | Get analytics |\n\n**Note**: The SDK automatically prepends /v1 to all endpoints, so you only need to specify the path (e.g., /auth/login instead of /v1/auth/login).
+- **Production**: https://api.licensechain.app/v1
+- **Development**: https://api.licensechain.app/v1
+
+### Available Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /v1/health | Health check |
+| POST | /v1/auth/register | User registration |
+| GET | /v1/auth/me | Current authenticated user |
+| GET | /v1/apps | List applications |
+| POST | /v1/apps/:id/licenses | Create license for app |
+| POST | /v1/licenses/verify | Verify license |
+| PATCH | /v1/licenses/:id/revoke | Revoke license |
+| PATCH | /v1/licenses/:id/activate | Activate license |
+| PATCH | /v1/licenses/:id/extend | Extend license |
+| GET | /v1/webhooks | List webhooks |
+| POST | /v1/webhooks | Create webhook |
+| GET | /v1/analytics/stats | Get analytics |
+
+**Note**: The SDK automatically prepends /v1 to all endpoints.
+
+
+## LicenseChain API (v1)
+
+This SDK targets the **LicenseChain HTTP API v1** implemented by the open-source API service.
+
+- **Production base URL:** https://api.licensechain.app/v1
+- **API repository (source of routes & behavior):** https://github.com/LicenseChain/api
+- **Baseline REST mapping (documented for integrators):**
+  - GET /health
+  - POST /auth/register
+  - POST /licenses/verify
+  - PATCH /licenses/:id/revoke
+  - PATCH /licenses/:id/activate
+  - PATCH /licenses/:id/extend
+  - GET /analytics/stats
 

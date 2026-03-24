@@ -17,29 +17,34 @@ else()
 endif()
 
 # Find required packages
-find_package(nlohmann_json REQUIRED)
+find_package(nlohmann_json QUIET)
+if(NOT nlohmann_json_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        nlohmann_json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+    )
+    FetchContent_MakeAvailable(nlohmann_json)
+endif()
 find_package(OpenSSL REQUIRED)
 find_package(Threads REQUIRED)
 
 # Include directories
 include_directories(include)
 
-# Source files
+# Source files currently available in this repository snapshot
 set(SOURCES
-    src/licensechain_client.cpp
-    src/http_client.cpp
-    src/json_parser.cpp
-    src/error_handler.cpp
+    src/utils.cpp
 )
 
-# Header files
+# Header files currently available in this repository snapshot
 set(HEADERS
     include/licensechain/licensechain_client.h
-    include/licensechain/http_client.h
-    include/licensechain/json_parser.h
-    include/licensechain/error_handler.h
     include/licensechain/models.h
     include/licensechain/exceptions.h
+    include/licensechain/services.h
+    include/licensechain/utils.h
+    include/licensechain/webhook_handler.h
 )
 
 # Create library
@@ -68,13 +73,17 @@ install(TARGETS LicenseChainCppSDK
     PUBLIC_HEADER DESTINATION include
 )
 
-# Create example executable
-add_executable(example examples/example.cpp)
-target_link_libraries(example LicenseChainCppSDK)
+# Optional example executable (only if present)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/example.cpp")
+    add_executable(example examples/example.cpp)
+    target_link_libraries(example LicenseChainCppSDK)
+endif()
 
-# Create tests
-enable_testing()
-add_subdirectory(tests)
+# Optional tests (only if present)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 # Package configuration
 include(CMakePackageConfigHelpers)
@@ -84,14 +93,16 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/LicenseChainCppSDKConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/LicenseChainCppSDKConfig.cmake"
-    INSTALL_DESTINATION lib/cmake/LicenseChainCppSDK
-)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/LicenseChainCppSDKConfig.cmake.in")
+    configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/LicenseChainCppSDKConfig.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/LicenseChainCppSDKConfig.cmake"
+        INSTALL_DESTINATION lib/cmake/LicenseChainCppSDK
+    )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/LicenseChainCppSDKConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/LicenseChainCppSDKConfigVersion.cmake"
-    DESTINATION lib/cmake/LicenseChainCppSDK
-)
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/LicenseChainCppSDKConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/LicenseChainCppSDKConfigVersion.cmake"
+        DESTINATION lib/cmake/LicenseChainCppSDK
+    )
+endif()
