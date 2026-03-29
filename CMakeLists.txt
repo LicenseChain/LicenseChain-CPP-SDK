@@ -40,6 +40,7 @@ set(SOURCES
 # Header files currently available in this repository snapshot
 set(HEADERS
     include/licensechain/licensechain_client.h
+    include/licensechain/license_assertion.h
     include/licensechain/models.h
     include/licensechain/exceptions.h
     include/licensechain/services.h
