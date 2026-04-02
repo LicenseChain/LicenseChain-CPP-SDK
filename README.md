@@ -19,7 +19,13 @@ Official C++ SDK for LicenseChain - Secure license management for C++ applicatio
 
 ## License assertion JWT (RS256 + JWKS)
 
-The C++ SDK exposes **`licensechain::LICENSE_TOKEN_USE_CLAIM`** in `include/licensechain/license_assertion.h` for claim-name parity with the Core API. Fetch **`GET /v1/licenses/jwks`**, select the JWK by JWT `kid`, and verify RS256 with your preferred crypto stack (OpenSSL, etc.), or delegate verification to a backend. Default API base: `https://api.licensechain.app/v1`.
+**API base:** `https://api.licensechain.app/v1`
+
+Successful **`POST /v1/licenses/verify`** may include **`license_token`**, **`license_token_expires_at`**, and **`license_jwks_uri`**. The JWT must carry **`token_use`** = **`licensechain_license_v1`** (see **`licensechain::LICENSE_TOKEN_USE_CLAIM`** in `include/licensechain/license_assertion.h`).
+
+**RS256 + JWKS:** Fetch **`GET /v1/licenses/jwks`**, select the JWK by JWT **`kid`**, and verify RS256 with your preferred crypto stack (OpenSSL, etc.), or delegate verification to a **backend**.
+
+**C++:** This package does not ship a full JWT implementation; integrators own HTTP/JWT. See [THIN_CLIENT_PARITY](https://github.com/LicenseChain/sdks/blob/main/docs/THIN_CLIENT_PARITY.md).
 
 ## ðŸ“¦ Installation
 
