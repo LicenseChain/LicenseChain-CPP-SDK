@@ -25,7 +25,7 @@ Successful **`POST /v1/licenses/verify`** may include **`license_token`**, **`li
 
 **RS256 + JWKS:** Fetch **`GET /v1/licenses/jwks`**, select the JWK by JWT **`kid`**, and verify RS256 with your preferred crypto stack (OpenSSL, etc.), or delegate verification to a **backend**.
 
-**C++:** This package does not ship a full JWT implementation; integrators own HTTP/JWT. For a runnable JWKS-only reference in .NET, see [LicenseChain-CSharp-SDK/examples/jwks_only](https://github.com/LicenseChain/LicenseChain-CSharp-SDK/tree/main/examples/jwks_only). See [THIN_CLIENT_PARITY](https://github.com/LicenseChain/sdks/blob/main/docs/THIN_CLIENT_PARITY.md).
+**C++:** This package does not ship a full JWT implementation; integrators own HTTP/JWT. For a runnable JWKS-only reference in .NET, see [LicenseChain-CSharp-SDK/examples/jwks_only](https://github.com/LicenseChain/LicenseChain-CSharp-SDK/tree/main/examples/jwks_only). See [THIN_CLIENT_PARITY](https://github.com/LicenseChain/sdks/blob/main/docs/THIN_CLIENT_PARITY.md) and [JWKS_THIN_CLIENT_QUICKREF](https://github.com/LicenseChain/sdks/blob/main/docs/JWKS_THIN_CLIENT_QUICKREF.md).
 
 ## ðŸ“¦ Installation
 
