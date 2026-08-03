@@ -6,15 +6,15 @@
 
 Official C++ SDK for LicenseChain - Secure license management for C++ applications.
 
-## ðŸš€ Features
+## 🚀 Features
 
 - **ðŸ” Secure Authentication** - User registration, login, and session management
-- **ðŸ“œ License Management** - Create, validate, update, and revoke licenses
+- **📜 License Management** - Create, validate, update, and revoke licenses
 - **ðŸ›¡ï¸ Hardware ID Validation** - Prevent license sharing and unauthorized access
-- **ðŸ”” Webhook Support** - Real-time license events and notifications
-- **ðŸ“Š Analytics Integration** - Track license usage and performance metrics
+- **🔔 Webhook Support** - Real-time license events and notifications
+- **📊 Analytics Integration** - Track license usage and performance metrics
 - **âš¡ High Performance** - Optimized for production workloads
-- **ðŸ”„ Async Operations** - Non-blocking HTTP requests and data processing
+- **🔄 Async Operations** - Non-blocking HTTP requests and data processing
 - **ðŸ› ï¸ Easy Integration** - Simple API with comprehensive documentation
 
 ## License assertion JWT (RS256 + JWKS)
@@ -27,7 +27,7 @@ Successful **`POST /v1/licenses/verify`** may include **`license_token`**, **`li
 
 **C++:** This package does not ship a full JWT implementation; integrators own HTTP/JWT. For a runnable JWKS-only reference in .NET, see [LicenseChain-CSharp-SDK/examples/jwks_only](https://github.com/LicenseChain/LicenseChain-CSharp-SDK/tree/main/examples/jwks_only). See [THIN_CLIENT_PARITY](https://docs.licensechain.app/) and [JWKS_THIN_CLIENT_QUICKREF](https://docs.licensechain.app/).
 
-## ðŸ“¦ Installation
+## 📦 Installation
 
 ### Method 1: CMake (Recommended)
 
@@ -64,7 +64,7 @@ target_link_libraries(your_target LicenseChain::LicenseChain)
 2. Extract the headers and libraries to your project
 3. Link against the LicenseChain library
 
-## ðŸš€ Quick Start
+## 🚀 Quick Start
 
 ### Basic Setup
 
@@ -110,7 +110,7 @@ auto stats = client.GetAnalyticsAsync(LicenseChain::AnalyticsRequest{}).get();
 std::cout << "Analytics request completed." << std::endl;
 ```
 
-## ðŸ“š API Reference
+## 📚 API Reference
 
 ### licensechain::LicenseChainClient
 
@@ -162,7 +162,7 @@ client.ExtendLicenseAsync(licenseId, "2027-01-01T00:00:00Z").get();
 auto result = client.GetAnalyticsAsync(request).get();
 ```
 
-## ðŸ”§ Configuration
+## 🔧 Configuration
 
 ### Environment Variables
 
@@ -200,7 +200,7 @@ licensechain::LicenseChainClient client(
 - Real-time license validation
 - Expiration checking
 
-## ðŸ“Š Analytics and Monitoring
+## 📊 Analytics and Monitoring
 
 ### Statistics
 
@@ -209,7 +209,7 @@ auto analytics = client.GetAnalyticsAsync(request).get();
 auto usage = client.GetUsageStatsAsync(request).get();
 ```
 
-## ðŸ”„ Error Handling
+## 🔄 Error Handling
 
 ### Custom Error Types
 
@@ -239,7 +239,7 @@ licensechain::LicenseChainClient client(
 );
 ```
 
-## ðŸ§ª Testing
+## 🧪 Testing
 
 ### Unit Tests
 
@@ -272,18 +272,18 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 3. Build: `mkdir build && cd build && cmake .. && make`
 4. Test: `ctest`
 
-## ðŸ“„ License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ðŸ†˜ Support
+## 🆘 Support
 
 - **Documentation**: [https://docs.licensechain.app/cpp](https://docs.licensechain.app/cpp)
 - **Issues**: [GitHub Issues](https://github.com/LicenseChain/LicenseChain-CPP-SDK/issues)
 - **Discord**: [LicenseChain Discord](https://discord.gg/licensechain)
 - **Email**: support@licensechain.app
 
-## ðŸ”— Related Projects
+## 🔗 Related Projects
 
 - [LicenseChain JavaScript SDK](https://github.com/LicenseChain/LicenseChain-JavaScript-SDK)
 - [LicenseChain Python SDK](https://github.com/LicenseChain/LicenseChain-Python-SDK)
