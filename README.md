@@ -8,7 +8,7 @@ Official C++ SDK for LicenseChain - Secure license management for C++ applicatio
 
 ## 🚀 Features
 
-- **ðŸ” Secure Authentication** - User registration, login, and session management
+- **🔐 Secure Authentication** - User registration, login, and session management
 - **📜 License Management** - Create, validate, update, and revoke licenses
 - **🛡 Hardware ID Validation** - Prevent license sharing and unauthorized access
 - **🔔 Webhook Support** - Real-time license events and notifications
@@ -253,7 +253,7 @@ ctest --output-on-failure
 
 Integration tests are repository-specific and may not be present in all snapshots.
 
-## ðŸ“ Examples
+## 📝 Examples
 
 See the `examples/` directory for complete examples:
 
@@ -261,7 +261,7 @@ See the `examples/` directory for complete examples:
 - `advanced_features.cpp` - Advanced features and configuration
 - `webhook_integration.cpp` - Webhook handling
 
-## ðŸ¤ Contributing
+## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
