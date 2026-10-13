@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Removed optional in-repo Conan and vcpkg packaging skeletons; install via CMake from GitHub source.
+
 ## [1.0.1] - 2026-10-10
 
 - Relicensed public surface under Elastic License 2.0 (ELv2).

@@ -200,14 +200,6 @@ site/
 *.swo
 *~
 
-# Conan
-conanfile.txt
-conaninfo.txt
-conanbuildinfo.*
-
-# vcpkg
-vcpkg_installed/
-
 # Local agent / OPSEC
 .claude/
 CLAUDE.md

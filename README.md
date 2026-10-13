@@ -49,9 +49,9 @@ make -j$(nproc)
 sudo make install
 ```
 
-### Method 2: Package Manager
+### Method 2: find_package (after CMake install)
 
-Add to your `CMakeLists.txt`:
+After installing from source (Method 1), add to your `CMakeLists.txt`:
 
 ```cmake
 find_package(LicenseChain REQUIRED)
