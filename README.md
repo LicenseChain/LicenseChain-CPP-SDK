@@ -116,10 +116,6 @@ std::cout << "Analytics request completed." << std::endl;
 
 All endpoints target the LicenseChain HTTP API at `https://api.licensechain.app/v1`. The client accepts either the canonical `/v1` base or the root host and normalizes requests to the same API version.
 
-### Base URL
-
-- **Production**: `https://api.licensechain.app/v1`
-- **Development**: `https://api.licensechain.app/v1`
 
 ### Available Endpoints
 
